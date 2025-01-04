@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'Plandieta.dart'; // Asegúrate de importar la página de Plan de Dieta
+import 'Plandieta.dart';
 
 class FormularioView extends StatefulWidget {
-  final String nombre; // Recibe el nombre del registro
+  final String nombre;
 
   const FormularioView({Key? key, required this.nombre}) : super(key: key);
 
