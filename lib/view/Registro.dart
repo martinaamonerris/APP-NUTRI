@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Formulario.dart'; // Importa correctamente el formulario
+import 'Formulario.dart';
 
 class RegisterView extends StatelessWidget {
   const RegisterView({Key? key}) : super(key: key);
