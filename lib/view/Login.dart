@@ -76,7 +76,7 @@ class LoginView extends StatelessWidget {
                   side: const BorderSide(color: Colors.black, width: 1),
                 ),
                 onPressed: () {
-                  // Implementa la funcionalidad de "Continuar con Google"
+                  
                 },
                 icon: const Icon(Icons.g_mobiledata),
                 label: const Text('Continue with Google'),
@@ -93,7 +93,7 @@ class LoginView extends StatelessWidget {
                   side: const BorderSide(color: Colors.black, width: 1),
                 ),
                 onPressed: () {
-                  // Implementa la funcionalidad de "Continuar con Apple"
+                  
                 },
                 icon: const Icon(Icons.apple),
                 label: const Text('Continue with Apple'),
