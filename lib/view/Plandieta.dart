@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'recetas_sugeridas.dart'; 
 
 class DietPlanView extends StatelessWidget {
   final String nombre;
@@ -27,120 +28,93 @@ class DietPlanView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Plan de Dieta',
-          style: TextStyle(color: Colors.black),
-        ),
+        title: const Text('Plan de Dieta'),
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.grey,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center, 
+          children: [
+            const SizedBox(height: 20),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.blueGrey.shade100, 
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(color: Colors.grey[300]!, blurRadius: 5, spreadRadius: 3),
+                  ],
+                ),
+                child: Text(
+                  'Objetivo: $objetivo',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
-                  const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+
+            const Text(
+              'Información Nutricional',
+              textAlign: TextAlign.center, 
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+
+            Center(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center, 
                     children: [
-                      Text(
-                        nombre,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Text(
-                        'Healthy Eating Enthusiast',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
-                      ),
+                      _buildNutrientCard('Calorías', '${calorias.toStringAsFixed(0)} kcal'),
+                      const SizedBox(width: 20),
+                      _buildNutrientCard('Proteínas', '${proteinas.toStringAsFixed(0)} g'),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildNutrientCard('Carbohidratos', '${carbohidratos.toStringAsFixed(0)} g'),
+                      const SizedBox(width: 20),
+                      _buildNutrientCard('Grasas', '${grasas.toStringAsFixed(0)} g'),
                     ],
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'PLAN DE DIETA',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Chip(
-                      label: Text(
-                        objetivo,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      backgroundColor: Colors.grey[300],
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Información Nutricional',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    GridView.count(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        _buildNutrientCard(
-                            'Calorías', '${calorias.toStringAsFixed(0)} kcal'),
-                        _buildNutrientCard(
-                            'Proteínas', '${proteinas.toStringAsFixed(0)} g'),
-                        _buildNutrientCard('Carbohidratos',
-                            '${carbohidratos.toStringAsFixed(0)} g'),
-                        _buildNutrientCard(
-                            'Grasas', '${grasas.toStringAsFixed(0)} g'),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
+            ),
+            const SizedBox(height: 40),
+
+            Center(
+              child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                  padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 ),
                 onPressed: () {
-                  // Acción al presionar el botón
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RecetasSugeridasView(),
+                    ),
+                  );
                 },
                 child: const Text(
                   'Ver Recetas',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -148,61 +122,60 @@ class DietPlanView extends StatelessWidget {
 
   Widget _buildNutrientCard(String title, String value) {
     return Container(
+      width: 150, 
+      height: 100, 
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 8,
-            spreadRadius: 2,
-            offset: const Offset(0, 4),
-          ),
+          BoxShadow(color: Colors.grey[300]!, blurRadius: 5, spreadRadius: 3),
         ],
       ),
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
+            const SizedBox(height: 10),
+            Text(
+              value,
+              style: const TextStyle(fontSize: 16),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   double calcularCalorias() {
-    double tmb = 10 * peso + 6.25 * altura - 5 * edad + 5;
-    double multiplicador = 1.2;
-    if (nivelActividad == 'Moderado') multiplicador = 1.5;
-    if (nivelActividad == 'Alto') multiplicador = 1.7;
+    double tmb = 10 * peso + 6.25 * altura - 5 * edad + 5; 
+    double multiplicador = 1.2; 
+    if (nivelActividad == 'Moderado') {
+      multiplicador = 1.5;
+    } else if (nivelActividad == 'Alto') {
+      multiplicador = 1.7;
+    }
     return tmb * multiplicador;
   }
 
   double calcularProteinas() {
-    if (objetivo == 'Ganar masa muscular') return peso * 2.2;
-    if (objetivo == 'Perder peso') return peso * 1.5;
-    return peso * 1.8;
+    if (objetivo == 'Ganar masa muscular') {
+      return peso * 2.2;
+    } else if (objetivo == 'Perder peso') {
+      return peso * 1.5;
+    } else {
+      return peso * 1.8;
+    }
   }
 
   double calcularCarbohidratos() {
-    return calcularCalorias() * 0.55 / 4;
+    return calcularCalorias() * 0.55 / 4; 
   }
 
   double calcularGrasas() {
-    return calcularCalorias() * 0.25 / 9;
+    return calcularCalorias() * 0.25 / 9; 
   }
 }
