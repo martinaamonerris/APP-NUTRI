@@ -1,24 +1,81 @@
 import 'package:flutter/material.dart';
-import 'Registro.dart';
+import 'package:nutri/views/leer.dart'; // Importamos el archivo de lectura de JSON
+import '/views/registro.dart'; // Asegúrate de que RegisterView esté importado
+import '/views/formulario.dart'; // Asegúrate de que FormularioView esté importado
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final emailController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
+  LoginViewState createState() => LoginViewState();
+}
 
-    String? validateEmail(String? value) {
-      const emailRegex = r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$';
-      if (value == null || value.isEmpty) {
-        return 'Please enter your email';
-      } else if (!RegExp(emailRegex).hasMatch(value)) {
-        return 'Please enter a valid email address';
-      }
-      return null; // Null indica que no hay errores
+class LoginViewState extends State<LoginView> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  // Variable para cambiar entre login y registro
+  bool isRegistering = false;
+
+  String? validateEmail(String? value) {
+    const emailRegex = r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$';
+    if (value == null || value.isEmpty) {
+      return 'Por favor, ingresa tu email';
+    } else if (!RegExp(emailRegex).hasMatch(value)) {
+      return 'Por favor, ingresa un correo válido';
     }
+    return null;
+  }
 
+  // Función para manejar el login
+  Future<void> handleLogin() async {
+    if (formKey.currentState!.validate()) {
+      final jsonReader = JsonReader();
+      try {
+        // Cargar los usuarios desde el archivo JSON
+        List<dynamic> usuarios =
+            await jsonReader.readJson('assets/usuarios.json');
+
+        // Verificar si el usuario y la contraseña coinciden
+        final user = usuarios.firstWhere(
+          (usuario) =>
+              usuario['email'] == emailController.text &&
+              usuario['contraseña'] == passwordController.text,
+          orElse: () => null,
+        );
+
+        if (user != null) {
+          // Si el usuario existe, ir al formulario
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FormularioView(
+                nombre:
+                    user['nombre'], // Pasar el nombre del usuario al formulario
+              ),
+            ),
+          );
+        } else {
+          // Si no existe el usuario, mostrar mensaje de error
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Usuario o contraseña incorrectos'),
+            ),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al leer los datos: $e'),
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -36,25 +93,37 @@ class LoginView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Create an account',
-                  style: TextStyle(fontSize: 16),
+                Text(
+                  isRegistering ? 'Create an account' : 'Login to your account',
+                  style: const TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'Enter your email to sign up for this app',
+                Text(
+                  isRegistering
+                      ? 'Enter your details to create an account'
+                      : 'Enter your email and password to login',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: emailController,
                   decoration: const InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'email@domain.com',
+                    labelText: 'email',
+                    hintText: 'email',
                     border: OutlineInputBorder(),
                   ),
                   validator: validateEmail, // Aplica la validación
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: passwordController,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                    hintText: 'Enter your password',
+                    border: OutlineInputBorder(),
+                  ),
+                  obscureText: true, // Para que la contraseña no se vea
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
@@ -65,21 +134,12 @@ class LoginView extends StatelessWidget {
                       vertical: 15,
                     ),
                   ),
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RegisterView(
-                            email: emailController.text,
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text(
-                    'Continue',
-                    style: TextStyle(color: Colors.white),
+                  onPressed: handleLogin, // Manejo del login
+                  child: Text(
+                    isRegistering
+                        ? 'Register'
+                        : 'Login', // Cambiar entre registro y login
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -119,6 +179,32 @@ class LoginView extends StatelessWidget {
                   'By clicking continue, you agree to our Terms of Service and Privacy Policy',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                const SizedBox(height: 20),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      isRegistering =
+                          !isRegistering; // Cambiar entre registro y login
+                    });
+                    if (isRegistering) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RegisterView(
+                            email: emailController
+                                .text, // Pasar el email a la página de registro
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  child: Text(
+                    isRegistering
+                        ? 'Already have an account? Login'
+                        : 'Don\'t have an account? Register',
+                    style: const TextStyle(color: Colors.black),
+                  ),
                 ),
               ],
             ),
