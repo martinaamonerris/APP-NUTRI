@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Formulario.dart';
+import '/view/formulario.dart';
 
 class RegisterView extends StatelessWidget {
   final String email;
@@ -45,7 +45,7 @@ class RegisterView extends StatelessWidget {
                 TextFormField(
                   controller: nameController,
                   decoration: const InputDecoration(
-                    labelText: 'Nombre',
+                    labelText: 'Username',
                     hintText: 'Ingresa tu nombre',
                     border: OutlineInputBorder(),
                   ),
@@ -57,6 +57,7 @@ class RegisterView extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 20),
+                // Campo de Email (ahora editable)
                 TextFormField(
                   controller: emailController,
                   decoration: const InputDecoration(
@@ -64,9 +65,19 @@ class RegisterView extends StatelessWidget {
                     hintText: 'Ingresa tu email',
                     border: OutlineInputBorder(),
                   ),
-                  readOnly: true, // Email es solo lectura
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, ingresa tu correo electrónico';
+                    } else if (!RegExp(
+                            r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$')
+                        .hasMatch(value)) {
+                      return 'Por favor, ingresa un correo electrónico válido';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 20),
+                // Campo de Contraseña
                 TextFormField(
                   controller: passwordController,
                   obscureText: true, // Para ocultar la contraseña
@@ -80,6 +91,7 @@ class RegisterView extends StatelessWidget {
                   validator: validatePassword, // Valida la contraseña
                 ),
                 const SizedBox(height: 30),
+                // Botón para guardar los datos
                 Center(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
