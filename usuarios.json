@@ -1,0 +1,28 @@
+{
+    "usuarios": [
+      {
+        "id": 1,
+        "nombre": "Alba",
+        "email": "albalopez@gmail.com",
+        "contraseña": "albalopez"
+      },
+      {
+        "id": 2,
+        "nombre": "Rafa",
+        "email": "rafaclaramunt@gmail.com",
+        "contraseña": "rafaclaramunt"
+      },
+      {
+        "id": 3,
+        "nombre": "Iria",
+        "email": "irialopez@gmail.com",
+        "contraseña": "irialopez"
+      },
+      {
+        "id": 4,
+        "nombre": "Martina",
+        "email": "martinamonerris@gmail.com",
+        "contraseña": "martinamonerris"
+      }
+    ]
+  }
