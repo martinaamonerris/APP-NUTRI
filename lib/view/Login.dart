@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nutri/views/leer.dart'; // Importamos el archivo de lectura de JSON
-import '/views/registro.dart'; // Asegúrate de que RegisterView esté importado
-import '/views/formulario.dart'; // Asegúrate de que FormularioView esté importado
+import '/view/registro.dart'; // Asegúrate de que RegisterView esté importado
+import '/view/formulario.dart'; // Asegúrate de que FormularioView esté importado
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
